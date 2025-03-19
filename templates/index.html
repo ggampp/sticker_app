@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticker para WhatsApp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Crie seu Sticker para WhatsApp</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <button type="submit">Converter</button>
+        </form>
+
+        {% if sticker_url %}
+            <h2>Seu Sticker:</h2>
+            <img src="{{ sticker_url }}" alt="Sticker" class="sticker-preview">
+            {% if whatsapp_link %}
+                <p>Envie para o WhatsApp:</p>
+                <a href="{{ whatsapp_link }}" target="_blank" class="whatsapp-btn">Enviar Sticker</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
