@@ -2,3 +2,5 @@ flask
 pillow
 webp
 rembg
+onnxruntime
+gunicorn

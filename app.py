@@ -12,7 +12,6 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 def convert_to_sticker(input_path, output_path):
-    # Abrir e processar a imagem
     img = Image.open(input_path)
     img_no_bg = remove(img)  # Remover fundo
     img_no_bg = img_no_bg.resize((512, 512), Image.Resampling.LANCZOS)
@@ -24,11 +23,13 @@ def index():
     whatsapp_link = None
     
     if request.method == 'POST':
-        # Verificar se o arquivo foi enviado
-        if 'file' not in request.files:
-            return "Nenhum arquivo enviado", 400
+        # Verificar se o arquivo e o número foram enviados
+        if 'file' not in request.files or 'phone_number' not in request.form:
+            return "Imagem ou número de telefone não fornecido", 400
         
         file = request.files['file']
+        phone_number = request.form['phone_number'].strip()  # Número fornecido pelo usuário
+        
         if file.filename == '':
             return "Nenhum arquivo selecionado", 400
         
@@ -41,8 +42,12 @@ def index():
         convert_to_sticker(input_path, output_path)
         
         # Gerar URLs
-        sticker_url = url_for('static', filename='uploads/sticker.webp')
-        whatsapp_link = f"https://wa.me/?text={request.url_root}{sticker_url}"
+        sticker_url = url_for('static', filename='uploads/sticker.webp', _external=True)  # URL absoluta
+        # Formatar o número (remover caracteres indesejados e adicionar código do país, se necessário)
+        phone_number = ''.join(filter(str.isdigit, phone_number))  # Apenas dígitos
+        if not phone_number.startswith('55'):  # Exemplo: adicionar código do Brasil se não estiver presente
+            phone_number = '55' + phone_number
+        whatsapp_link = f"https://wa.me/{phone_number}?text={sticker_url}"
         
         # Remover arquivo temporário
         os.remove(input_path)

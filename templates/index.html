@@ -11,7 +11,8 @@
         <h1>Crie seu Sticker para WhatsApp</h1>
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="file" accept="image/*" required>
-            <button type="submit">Converter</button>
+            <input type="text" name="phone_number" placeholder="Número do WhatsApp (ex: 11987654321)" required>
+            <button type="submit">Converter e Enviar</button>
         </form>
 
         {% if sticker_url %}
